@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="A filterable C++ STL cheat sheet for NeetCode problems, with pattern templates and modern C++.">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; font: 14px/1.5 system-ui, sans-serif; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Python Field Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a laminated field reference card. A sticky index bar with a filter, then stacked
+   panels: call tables with cost chips, and code cards in a grid that drops to one column on phones. */
+:root {
+  --paper: #edf0f3;
+  --panel: #fbfcfd;
+  --ink: #142029;
+  --muted: #56646f;
+  --rule: #d3dae1;
+  --accent: #1c4fd8;
+  --accent-soft: #e2e9fb;
+  --code-bg: #f2f4f7;
+  --warn: #8a5100;
+  --warn-soft: #fcefd0;
+  --fast: #0a6a62;
+  --fast-soft: #d6efea;
+  --mid: #46525e;
+  --mid-soft: #e4e8ec;
+  --slow: #ab2718;
+  --slow-soft: #fae1dc;
+  --syn-kw: #1c4fd8;
+  --syn-type: #0a6a62;
+  --syn-str: #a03b0b;
+  --syn-num: #8a5100;
+  --syn-com: #6f7d89;
+  --syn-fn: #6a32c9;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  --paper: #0e141a;
+  --panel: #141b23;
+  --ink: #e2e8ee;
+  --muted: #95a3b1;
+  --rule: #26313c;
+  --accent: #8aaaff;
+  --accent-soft: #1a2645;
+  --code-bg: #0b1015;
+  --warn: #f0b551;
+  --warn-soft: #2b2112;
+  --fast: #56d3c2;
+  --fast-soft: #102f2b;
+  --mid: #b6c1cd;
+  --mid-soft: #212b36;
+  --slow: #ff8f80;
+  --slow-soft: #3a1a16;
+  --syn-kw: #8aaaff;
+  --syn-type: #56d3c2;
+  --syn-str: #f2a97c;
+  --syn-num: #f0b551;
+  --syn-com: #6e7e8e;
+  --syn-fn: #c6a6ff;
+  color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0e141a;
+  --panel: #141b23;
+  --ink: #e2e8ee;
+  --muted: #95a3b1;
+  --rule: #26313c;
+  --accent: #8aaaff;
+  --accent-soft: #1a2645;
+  --code-bg: #0b1015;
+  --warn: #f0b551;
+  --warn-soft: #2b2112;
+  --fast: #56d3c2;
+  --fast-soft: #102f2b;
+  --mid: #b6c1cd;
+  --mid-soft: #212b36;
+  --slow: #ff8f80;
+  --slow-soft: #3a1a16;
+  --syn-kw: #8aaaff;
+  --syn-type: #56d3c2;
+  --syn-str: #f2a97c;
+  --syn-num: #f0b551;
+  --syn-com: #6e7e8e;
+  --syn-fn: #c6a6ff;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 1140px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); padding-block: 28px 72px; }
+code { font-family: var(--font-mono); font-size: 0.86em; }
+:not(pre) > code { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 3px; padding: 0 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.masthead { display: grid; gap: 14px; padding-block: 8px 22px; }
+.kicker { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.01em; font-size: clamp(2.8rem, 8vw, 4.6rem); line-height: 0.92; margin: 0; text-wrap: balance; }
+h1 .plus { color: var(--accent); }
+.lede { max-width: 64ch; color: var(--muted); font-size: 1.05rem; margin: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; font-size: 13px; color: var(--muted); }
+.legend span.item { display: inline-flex; gap: 6px; align-items: center; }
+
+.toolbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); border-bottom: 1px solid var(--rule); padding-block: 10px; display: grid; gap: 8px; }
+.search { display: flex; gap: 10px; align-items: center; }
+.search input { flex: 1; min-width: 0; font-family: var(--font-mono); font-size: 14px; padding: 9px 12px; border: 1px solid var(--rule); border-radius: 4px; background: var(--panel); color: var(--ink); }
+.search input::placeholder { color: var(--muted); }
+.search input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.search .count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+nav.index { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
+nav.index a { flex: none; font-family: var(--font-display); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 14px; color: var(--ink); text-decoration: none; padding: 3px 10px; border: 1px solid var(--rule); border-radius: 3px; background: var(--panel); }
+nav.index a:hover, nav.index a:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
+
+section.panel { scroll-margin-top: 112px; padding-block: 34px 4px; display: grid; gap: 16px; }
+.panel-head { display: flex; align-items: baseline; gap: 8px 14px; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 6px; }
+.panel-head h2 { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; font-size: clamp(1.7rem, 4vw, 2.2rem); line-height: 1; margin: 0; text-wrap: balance; }
+.panel-head h2 code { background: none; border: none; padding: 0; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 0.78em; }
+.tag { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 3px; white-space: nowrap; }
+.intro { margin: 0; max-width: 72ch; color: var(--muted); }
+.block-title { font-family: var(--font-display); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 15px; color: var(--muted); margin: 0 0 6px; }
+.block-title code { text-transform: none; letter-spacing: 0; }
+
+.table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 8px 12px; background: var(--code-bg); border-bottom: 1px solid var(--rule); }
+td { padding: 8px 12px; border-top: 1px solid var(--rule); vertical-align: top; }
+tbody tr:first-child td { border-top: none; }
+td.t-code code { background: none; border: none; padding: 0; font-size: 13px; color: var(--ink); }
+td.t-code { min-width: 15ch; }
+table.calls td.t-code:first-child { width: 42%; }
+td.t-cost, th.t-cost { width: 1%; white-space: nowrap; text-align: right; }
+.cost { display: inline-block; font-family: var(--font-mono); font-size: 12px; line-height: 1.6; padding: 0 7px; border-radius: 3px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cost.fast { color: var(--fast); background: var(--fast-soft); }
+.cost.mid { color: var(--mid); background: var(--mid-soft); }
+.cost.slow { color: var(--slow); background: var(--slow-soft); }
+
+.note { margin: 0; font-size: 14px; color: var(--muted); padding: 10px 12px; border: 1px dashed var(--rule); border-radius: 4px; }
+.note b { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 8px; color: var(--accent); }
+.note.warn { background: var(--warn-soft); border-color: transparent; color: var(--ink); }
+.note.warn b { color: var(--warn); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.card-head { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px dashed var(--rule); }
+.card-head h3 { margin: 0; font-size: 15px; font-weight: 600; flex: 1; min-width: 0; }
+.card-tag { font-family: var(--font-mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+.copy { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--rule); border-radius: 3px; padding: 2px 8px; cursor: pointer; }
+.copy:hover { border-color: var(--accent); }
+.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.card-note { margin: 0; padding: 9px 12px; font-size: 13.5px; color: var(--muted); border-bottom: 1px dashed var(--rule); }
+pre { margin: 0; padding: 12px 14px; overflow-x: auto; background: var(--code-bg); font-size: 13px; line-height: 1.55; flex: 1; tab-size: 4; }
+pre code { font-size: inherit; color: var(--ink); }
+
+.hljs-keyword, .hljs-meta .hljs-keyword { color: var(--syn-kw); font-weight: 600; }
+.hljs-type, .hljs-built_in { color: var(--syn-type); }
+.hljs-string, .hljs-meta .hljs-string, .hljs-char { color: var(--syn-str); }
+.hljs-number, .hljs-literal { color: var(--syn-num); }
+.hljs-comment { color: var(--syn-com); font-style: italic; }
+.hljs-title, .hljs-title.function_, .hljs-title.class_ { color: var(--syn-fn); }
+.hljs-meta { color: var(--syn-com); }
+
+.range { background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px 12px; display: grid; gap: 10px; overflow-x: auto; }
+.range-grid { display: grid; grid-template-columns: repeat(6, 54px); row-gap: 4px; width: max-content; padding-left: 1px; }
+.range-grid .cell { font-family: var(--font-mono); font-size: 15px; height: 38px; display: grid; place-items: center; border: 1px solid var(--ink); margin-left: -1px; background: var(--code-bg); font-variant-numeric: tabular-nums; }
+.range-grid .cell.past { border-style: dashed; border-color: var(--muted); color: var(--muted); background: transparent; font-size: 11px; }
+.range-grid .idx { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-align: center; }
+.range-grid .ptr { font-family: var(--font-mono); font-size: 12px; color: var(--accent); text-align: center; white-space: nowrap; }
+.range p { margin: 0; font-size: 14px; color: var(--muted); max-width: 70ch; }
+
+.traps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 12px; }
+.trap { background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 12px 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.trap h3 { margin: 0; font-size: 15px; font-weight: 600; display: flex; gap: 8px; align-items: baseline; }
+.trap h3::before { content: "!"; flex: none; display: inline-grid; place-items: center; width: 19px; height: 19px; border-radius: 3px; font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--warn); background: var(--warn-soft); transform: translateY(2px); }
+.trap p { margin: 0; font-size: 14px; color: var(--muted); }
+.trap .fix { color: var(--ink); }
+.trap .fix b { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fast); margin-right: 8px; }
+
+.empty { padding: 40px 0; color: var(--muted); text-align: center; }
+footer { margin-top: 48px; padding-top: 14px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+
+@media (max-width: 640px) {
+  body { font-size: 14.5px; }
+  .tag { margin-left: 0; }
+  table.stack, table.stack tbody, table.stack tr, table.stack td { display: block; width: auto !important; }
+  table.stack thead { display: none; }
+  table.stack tr { padding: 10px 12px; border-top: 1px solid var(--rule); }
+  table.stack tbody tr:first-child { border-top: none; }
+  table.stack td { padding: 2px 0; border: none; text-align: left; }
+  table.stack td.t-cost { padding-top: 4px; }
+  table.labeled td[data-label]:not(:first-child)::before { content: attr(data-label); display: block; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+:root { --accent: #5a3bc2; --accent-soft: #ece7fb; --syn-kw: #5a3bc2; --syn-fn: #1c4fd8; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --accent: #b9a6ff; --accent-soft: #261e47; --syn-kw: #b9a6ff; --syn-fn: #8aaaff; }
+}
+:root[data-theme="dark"] { --accent: #b9a6ff; --accent-soft: #261e47; --syn-kw: #b9a6ff; --syn-fn: #8aaaff; }
+.hljs-meta { color: var(--syn-num); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <p class="kicker">NeetCode · LeetCode · Python 3.9+</p>
+    <h1><span class="plus">&gt;&gt;&gt;</span> Python Field Card</h1>
+    <p class="lede">The built-ins and standard library tools NeetCode problems actually use, when to reach for each one, pattern templates you can adapt, and the object-oriented design toolkit for design rounds.</p>
+    <div class="legend"><span>Cost chips:</span><span class="item"><span class="cost fast">O(1)</span> constant or log</span><span class="item"><span class="cost mid">O(n)</span> linear to n log n</span><span class="item"><span class="cost slow">O(2ⁿ)</span> exponential or worst case</span><span class="item"><span class="cost fast">O(1)*</span> amortized</span></div>
+  </header>
+  <div class="toolbar">
+    <div class="search">
+      <label for="filter" class="visually-hidden">Filter the card</label>
+      <input id="filter" type="search" placeholder="Filter: try bisect, heapq, popleft, BFS…  ( / )" autocomplete="off" spellcheck="false">
+      <span class="count" id="filter-count"></span>
+    </div>
+    <nav class="index" aria-label="Sections"><a href="#pick">Pick a tool</a><a href="#basics">Basics</a><a href="#list">list</a><a href="#str">str</a><a href="#dict">dict / set / Counter</a><a href="#stack-queue">Stack / deque</a><a href="#heap">heapq</a><a href="#sorting">Sort / bisect</a><a href="#toolbox">itertools / math</a><a href="#patterns">Patterns</a><a href="#nodes">Lists / trees</a><a href="#ood">OOD toolkit</a><a href="#big-o">Big-O</a><a href="#gotchas">Gotchas</a></nav>
+  </div>
+  <main><section class="panel" id="pick" data-section><div class="panel-head"><h2>Pick the tool</h2><span class="tag">Start here</span></div><p class="intro">Find the clue in the problem statement, then reach for the matching tool. Most NeetCode problems are one of these rows.</p><div data-block><div class="table-wrap"><table class="stack labeled"><thead><tr><th>When the problem says…</th><th>Reach for</th><th>Core move</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td data-label="When the problem says…">"Have I seen this before?" · duplicates · a pair that sums to target</td><td data-label="Reach for"><code>set</code> / <code>dict</code></td><td data-label="Core move"><code>if x in seen</code>, then add it</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Count letters or frequencies · anagrams</td><td data-label="Reach for"><code>Counter</code></td><td data-label="Core move"><code>Counter(s) == Counter(t)</code></td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Group things that share a key</td><td data-label="Reach for"><code>defaultdict(list)</code></td><td data-label="Core move"><code>groups[key].append(x)</code></td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Sorted array, find a pair or triple</td><td data-label="Reach for">Two pointers</td><td data-label="Core move">Move <code>l</code> or <code>r</code> based on the sum</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Longest or shortest contiguous substring / subarray</td><td data-label="Reach for">Sliding window</td><td data-label="Core move">Grow <code>r</code>; shrink <code>l</code> while the window is invalid</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Subarray sums to k</td><td data-label="Reach for">Prefix sums + <code>dict</code></td><td data-label="Core move">Count earlier prefixes equal to <code>total - k</code></td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Top k · k-th largest · running median</td><td data-label="Reach for"><code>heapq</code></td><td data-label="Core move">Keep a heap of size k</td><td class="t-cost"><span class="cost mid">O(n log k)</span></td></tr><tr data-entry><td data-label="When the problem says…">Matching brackets · next greater element · undo</td><td data-label="Reach for"><code>list</code> as a stack</td><td data-label="Core move"><code>append</code>, <code>stack[-1]</code>, <code>pop()</code></td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Fewest steps · nearest · spread level by level</td><td data-label="Reach for">BFS with a <code>deque</code></td><td data-label="Core move"><code>popleft()</code>; mark visited when you push</td><td class="t-cost"><span class="cost mid">O(V + E)</span></td></tr><tr data-entry><td data-label="When the problem says…">Count islands · explore everything connected</td><td data-label="Reach for">DFS</td><td data-label="Core move">Recursion, or a stack for very deep graphs</td><td class="t-cost"><span class="cost mid">O(V + E)</span></td></tr><tr data-entry><td data-label="When the problem says…">Prerequisites · build order · cycle in a directed graph</td><td data-label="Reach for">Topological sort</td><td data-label="Core move">Indegree counts + a <code>deque</code></td><td class="t-cost"><span class="cost mid">O(V + E)</span></td></tr><tr data-entry><td data-label="When the problem says…">Merge groups · redundant connection · components</td><td data-label="Reach for">Union-find</td><td data-label="Core move"><code>parent</code> list + <code>find</code></td><td class="t-cost"><span class="cost fast">~O(1)</span></td></tr><tr data-entry><td data-label="When the problem says…">Cheapest path when edges have weights</td><td data-label="Reach for">Dijkstra</td><td data-label="Core move"><code>heapq</code> of <code>(dist, node)</code></td><td class="t-cost"><span class="cost mid">O(E log V)</span></td></tr><tr data-entry><td data-label="When the problem says…">Sorted data · first value ≥ x</td><td data-label="Reach for"><code>bisect_left</code></td><td data-label="Core move">Or a hand-written binary search</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Smallest speed / capacity that works</td><td data-label="Reach for">Binary search on the answer</td><td data-label="Core move">Test the middle value; keep the half that can still work</td><td class="t-cost"><span class="cost mid">O(n log m)</span></td></tr><tr data-entry><td data-label="When the problem says…">Overlapping intervals · meeting rooms</td><td data-label="Reach for"><code>intervals.sort()</code>, then sweep</td><td data-label="Core move">Compare with the last merged interval</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Max or min of every window</td><td data-label="Reach for">Monotonic <code>deque</code></td><td data-label="Core move">Pop weaker values off the back</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td data-label="When the problem says…">Prefix lookups · word search</td><td data-label="Reach for">Trie of nested <code>dict</code>s</td><td data-label="Core move">Walk one char per level</td><td class="t-cost"><span class="cost mid">O(len)</span></td></tr><tr data-entry><td data-label="When the problem says…">Count ways · min cost · overlapping subproblems</td><td data-label="Reach for">Dynamic programming</td><td data-label="Core move"><code>@cache</code> on a recursive function, or a table</td><td class="t-cost"><span class="cost mid">O(n·m)</span></td></tr><tr data-entry><td data-label="When the problem says…">All subsets · permutations · combinations</td><td data-label="Reach for">Backtracking or <code>itertools</code></td><td data-label="Core move">Choose, recurse, <code>pop()</code></td><td class="t-cost"><span class="cost slow">exponential</span></td></tr></tbody></table></div></div></section><section class="panel" id="basics" data-section><div class="panel-head"><h2>Basics you use every time</h2><span class="tag">Week 1</span></div><p class="intro">Loops, numbers and built-ins. These show up in almost every solution.</p><div class="cards" data-block><article class="card" data-entry><div class="card-head"><h3>LeetCode's template</h3><span class="card-tag">Setup</span><button class="copy" type="button" aria-label="Copy the LeetCode&#x27;s template code">Copy</button></div><pre><code class="language-python">from typing import List, Optional
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -&gt; List[int]:
+        ...
+# Type hints are optional. self is the Solution object; ignore it.
+# In Python 3.9+ you can write list[int] instead of List[int].</code></pre></article></div><div data-block><h3 class="block-title">Loops and numbers</h3><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>for i, x in enumerate(nums):</code></td><td data-label="What it does">Index and value together</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>for a, b in zip(xs, ys):</code></td><td data-label="What it does">Walk two lists side by side. Stops at the shorter one</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>range(n)</code> · <code>range(1, n + 1)</code> · <code>range(n - 1, -1, -1)</code></td><td data-label="What it does">0 to n-1 · 1 to n · n-1 down to 0</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>for x in reversed(nums):</code></td><td data-label="What it does">Iterate backwards without making a copy</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>[x * x for x in nums if x &gt; 0]</code></td><td data-label="What it does">List comprehension: map and filter in one line</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>a, b = b, a</code></td><td data-label="What it does">Swap</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>float("inf")</code> · <code>-float("inf")</code></td><td data-label="What it does">Starting values for "best so far" min and max</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>x // y</code> · <code>x % y</code></td><td data-label="What it does">Floor division and remainder. <code>-7 // 2</code> is -4</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>int(a / b)</code></td><td data-label="What it does">Division that truncates toward zero, like C++ (Evaluate Reverse Polish Notation)</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>divmod(a, b)</code></td><td data-label="What it does"><code>(a // b, a % b)</code> in one call</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>ord(c) - ord("a")</code> · <code>chr(ord("a") + i)</code></td><td data-label="What it does">Letter to an index 0–25, and back</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>int("42")</code> · <code>str(42)</code></td><td data-label="What it does">String to number, number to string</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>x if cond else y</code></td><td data-label="What it does">Inline if</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>any(x &lt; 0 for x in nums)</code> · <code>all(...)</code></td><td data-label="What it does">True if any element passes · if all do</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>max(words, key=len)</code></td><td data-label="What it does">Max by a key function. <code>min</code> works the same way</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>x &amp; 1</code> · <code>x &gt;&gt; 1</code> · <code>a ^ b</code></td><td data-label="What it does">Lowest bit · shift right · XOR (Single Number)</td></tr></tbody></table></div></div></section><section class="panel" id="list" data-section><div class="panel-head"><h2><code>list</code></h2><span class="tag">Week 1</span></div><p class="intro">A resizable array, and your default container. Fast at the end, slow at the front.</p><div data-block><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>[]</code> · <code>[0] * n</code></td><td data-label="What it does">Empty · n zeros</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>grid = [[0] * cols for _ in range(rows)]</code></td><td data-label="What it does">2D grid where each row is its own list</td><td class="t-cost"><span class="cost mid">O(n·m)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>len(nums)</code></td><td data-label="What it does">Length</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums[i]</code> · <code>nums[-1]</code></td><td data-label="What it does">Element at i · last element</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums.append(x)</code></td><td data-label="What it does">Add to the end</td><td class="t-cost"><span class="cost fast">O(1)*</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums.pop()</code></td><td data-label="What it does">Remove and return the last element</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums.pop(i)</code> · <code>nums.insert(i, x)</code></td><td data-label="What it does">Remove or insert at i. Shifts everything after it</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>x in nums</code></td><td data-label="What it does">Linear search. Use a <code>set</code> if you check often</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums.index(x)</code> · <code>nums.count(x)</code></td><td data-label="What it does">First index of x (ValueError if missing) · how many</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums[i:j]</code></td><td data-label="What it does">Copy of indexes i through j-1</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums[::-1]</code></td><td data-label="What it does">Reversed copy</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums.reverse()</code></td><td data-label="What it does">Reverse in place. Returns <code>None</code></td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums.sort()</code> · <code>sorted(nums)</code></td><td data-label="What it does">Sort in place (returns <code>None</code>) · return a new sorted list</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums.extend(other)</code></td><td data-label="What it does">Append every element of <code>other</code></td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums.copy()</code> · <code>nums[:]</code></td><td data-label="What it does">Shallow copy</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>del nums[i]</code></td><td data-label="What it does">Remove index i</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr></tbody></table></div></div><p class="note tip"><b>Tip</b><code>*</code> means amortized: <code>append</code> is O(1) on average and occasionally O(n) when the list grows.</p></section><section class="panel" id="str" data-section><div class="panel-head"><h2><code>str</code></h2><span class="tag">Week 1</span></div><p class="intro">Strings are immutable: every "change" builds a new string. To edit one, convert it to a list and join it back.</p><div data-block><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>len(s)</code> · <code>s[i]</code> · <code>s[-1]</code></td><td data-label="What it does">Length · char at i · last char</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>s[i:j]</code></td><td data-label="What it does">Substring from i through j-1 (a copy)</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>s[::-1]</code></td><td data-label="What it does">Reversed copy</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>"".join(parts)</code></td><td data-label="What it does">Build a string from a list. The fast way to build strings</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>s.split()</code> · <code>s.split(",")</code></td><td data-label="What it does">Split on whitespace · on a separator</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>c.isalnum()</code> · <code>c.isalpha()</code> · <code>c.isdigit()</code></td><td data-label="What it does">Character tests (Valid Palindrome)</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>s.lower()</code> · <code>s.upper()</code> · <code>s.strip()</code></td><td data-label="What it does">Lowercase · uppercase · trim whitespace. Each returns a new string</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>s.find(sub)</code> · <code>s.index(sub)</code></td><td data-label="What it does">First match. <code>find</code> returns -1 when missing; <code>index</code> raises ValueError</td><td class="t-cost"><span class="cost mid">O(n·m)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>s.startswith(p)</code> · <code>s.endswith(p)</code></td><td data-label="What it does">Prefix and suffix checks</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>s.replace(a, b)</code></td><td data-label="What it does">New string with every <code>a</code> replaced</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>"".join(sorted(s))</code></td><td data-label="What it does">Sorted letters. Makes an anagram key</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>list(s)</code></td><td data-label="What it does">Mutable list of chars. Edit it, then <code>"".join</code> it back</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>f"{name}: {count}"</code></td><td data-label="What it does">f-string formatting</td><td class="t-cost"></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>string.ascii_lowercase</code></td><td data-label="What it does"><code>"abcdefghijklmnopqrstuvwxyz"</code> (<code>import string</code>)</td><td class="t-cost"></td></tr></tbody></table></div></div></section><section class="panel" id="dict" data-section><div class="panel-head"><h2><code>dict</code>, <code>set</code>, <code>Counter</code>, <code>defaultdict</code></h2><span class="tag">Week 1</span></div><p class="intro">Average O(1) lookup. This is the answer to every "have I seen it?" question.</p><div data-block><h3 class="block-title">dict: key → value</h3><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>d = {}</code> · <code>d = dict()</code></td><td data-label="What it does">Empty dict. <code>{}</code> is a dict, not a set</td><td class="t-cost"></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>d[k] = v</code></td><td data-label="What it does">Insert or overwrite</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>d[k]</code></td><td data-label="What it does">Read. Raises KeyError if k is missing</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>d.get(k, 0)</code></td><td data-label="What it does">Read with a default. Doesn't insert</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>k in d</code></td><td data-label="What it does">Is k a key</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>d.pop(k)</code> · <code>del d[k]</code></td><td data-label="What it does">Remove. <code>d.pop(k, None)</code> doesn't raise when k is missing</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>for k, v in d.items():</code></td><td data-label="What it does">Loop over pairs, in insertion order</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>d.keys()</code> · <code>d.values()</code></td><td data-label="What it does">Views of the keys or values</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>d.setdefault(k, []).append(x)</code></td><td data-label="What it does">Insert a default if missing, then use it</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr></tbody></table></div></div><div data-block><h3 class="block-title">collections: Counter and defaultdict</h3><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>from collections import Counter, defaultdict</code></td><td data-label="What it does">Both live in <code>collections</code></td><td class="t-cost"></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>defaultdict(int)</code></td><td data-label="What it does">Missing keys start at 0, so <code>d[x] += 1</code> just works</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>defaultdict(list)</code></td><td data-label="What it does">Missing keys start as <code>[]</code>, so <code>d[k].append(x)</code> just works</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>defaultdict(set)</code></td><td data-label="What it does">Adjacency sets for graphs</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>Counter(s)</code></td><td data-label="What it does">Count every element</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>c[x]</code></td><td data-label="What it does">Count of x. 0 if missing, and doesn't insert</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>c.most_common(k)</code></td><td data-label="What it does">The k most frequent as <code>(item, count)</code> pairs</td><td class="t-cost"><span class="cost mid">O(n log k)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>Counter(s) == Counter(t)</code></td><td data-label="What it does">Same counts. Valid Anagram in one line</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>c1 - c2</code> · <code>c1 + c2</code></td><td data-label="What it does">Subtract (drops counts ≤ 0) · add counts</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>c.total()</code></td><td data-label="What it does">Sum of all counts. Python 3.10+</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr></tbody></table></div></div><div data-block><h3 class="block-title">set: keys only</h3><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>set()</code> · <code>set(nums)</code></td><td data-label="What it does">Empty set · from a list, dropping duplicates</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>s.add(x)</code> · <code>x in s</code></td><td data-label="What it does">Add · membership</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>s.remove(x)</code> · <code>s.discard(x)</code></td><td data-label="What it does"><code>remove</code> raises if x is missing; <code>discard</code> doesn't</td><td class="t-cost"><span class="cost fast">O(1) avg</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>a | b</code> · <code>a &amp; b</code> · <code>a - b</code></td><td data-label="What it does">Union · intersection · difference</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>len(set(nums)) &lt; len(nums)</code></td><td data-label="What it does">Contains Duplicate in one line</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>frozenset(s)</code></td><td data-label="What it does">A hashable set, usable as a dict key</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr></tbody></table></div></div><div class="cards" data-block><article class="card" data-entry><div class="card-head"><h3>Two Sum: complement lookup</h3><span class="card-tag">Week 1</span><button class="copy" type="button" aria-label="Copy the Two Sum: complement lookup code">Copy</button></div><pre><code class="language-python">def two_sum(nums, target):
+    seen = {}                               # value -&gt; index
+    for i, x in enumerate(nums):
+        if target - x in seen:
+            return [seen[target - x], i]
+        seen[x] = i                         # store after checking
+    return []</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Group Anagrams: tuple keys</h3><span class="card-tag">Week 1</span><button class="copy" type="button" aria-label="Copy the Group Anagrams: tuple keys code">Copy</button></div><pre><code class="language-python">from collections import defaultdict
+
+def group_anagrams(strs):
+    groups = defaultdict(list)
+    for word in strs:
+        count = [0] * 26
+        for c in word:
+            count[ord(c) - ord("a")] += 1
+        groups[tuple(count)].append(word)   # lists can't be keys; tuples can
+    return list(groups.values())</code></pre></article></div><p class="note warn"><b>Watch out</b>Keys must be hashable. A <code>list</code> can't be a key; a <code>tuple</code> can. Use <code>tuple(sorted(word))</code> or <code>tuple(count)</code> for anagram groups and <code>(r, c)</code> for grid cells.</p></section><section class="panel" id="stack-queue" data-section><div class="panel-head"><h2>Stacks and <code>deque</code></h2><span class="tag">Week 4</span></div><p class="intro">A plain <code>list</code> is your stack. For a queue, use <code>collections.deque</code>: <code>list.pop(0)</code> is O(n).</p><div data-block><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>stack = []</code></td><td data-label="What it does">A list is the stack</td><td class="t-cost"></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>stack.append(x)</code></td><td data-label="What it does">Push</td><td class="t-cost"><span class="cost fast">O(1)*</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>stack[-1]</code></td><td data-label="What it does">Peek at the top. IndexError if empty</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>stack.pop()</code></td><td data-label="What it does">Remove and return the top</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>if stack:</code></td><td data-label="What it does">True when the stack isn't empty</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>q = deque([start])</code></td><td data-label="What it does">A queue starting with one item (<code>from collections import deque</code>)</td><td class="t-cost"></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>q.append(x)</code> · <code>q.popleft()</code></td><td data-label="What it does">Enqueue at the back · dequeue from the front</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>q.appendleft(x)</code> · <code>q.pop()</code></td><td data-label="What it does">The other two ends</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>q[0]</code> · <code>q[-1]</code></td><td data-label="What it does">Peek at either end</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>q[i]</code></td><td data-label="What it does">Access the middle. Slow; a deque isn't an array</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>deque(maxlen=k)</code></td><td data-label="What it does">Keeps only the last k items; older ones fall off</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr></tbody></table></div></div><div class="cards" data-block><article class="card" data-entry><div class="card-head"><h3>Valid Parentheses</h3><span class="card-tag">Week 4</span><button class="copy" type="button" aria-label="Copy the Valid Parentheses code">Copy</button></div><pre><code class="language-python">def is_valid(s):
+    match = {")": "(", "]": "[", "}": "{"}
+    stack = []
+    for c in s:
+        if c not in match:
+            stack.append(c)                 # opening bracket
+        elif not stack or stack.pop() != match[c]:
+            return False
+    return not stack</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Daily Temperatures: monotonic stack</h3><span class="card-tag">Week 4</span><button class="copy" type="button" aria-label="Copy the Daily Temperatures: monotonic stack code">Copy</button></div><pre><code class="language-python">def daily_temperatures(temps):
+    answer = [0] * len(temps)
+    stack = []                              # indexes still waiting for a warmer day
+    for i, t in enumerate(temps):
+        while stack and temps[stack[-1]] &lt; t:
+            j = stack.pop()
+            answer[j] = i - j
+        stack.append(i)
+    return answer</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Sliding Window Maximum: monotonic deque</h3><span class="card-tag">Week 3</span><button class="copy" type="button" aria-label="Copy the Sliding Window Maximum: monotonic deque code">Copy</button></div><pre><code class="language-python">from collections import deque
+
+def max_sliding_window(nums, k):
+    dq = deque()                            # indexes; values decrease front to back
+    out = []
+    for i, x in enumerate(nums):
+        while dq and nums[dq[-1]] &lt;= x:
+            dq.pop()
+        dq.append(i)
+        if dq[0] &lt;= i - k:
+            dq.popleft()                    # left the window
+        if i &gt;= k - 1:
+            out.append(nums[dq[0]])
+    return out</code></pre></article></div></section><section class="panel" id="heap" data-section><div class="panel-head"><h2><code>heapq</code></h2><span class="tag">Week 8</span></div><p class="intro">Turns a plain list into a <strong>min</strong>-heap. There is no heap class: you pass the list to each function.</p><div data-block><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>import heapq</code> · <code>h = []</code></td><td data-label="What it does">Any list can be a heap</td><td class="t-cost"></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>heapq.heappush(h, x)</code></td><td data-label="What it does">Add</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>heapq.heappop(h)</code></td><td data-label="What it does">Remove and return the smallest</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>h[0]</code></td><td data-label="What it does">Peek at the smallest</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>heapq.heapify(nums)</code></td><td data-label="What it does">Turn a list into a heap in place</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>heapq.heappush(h, -x)</code></td><td data-label="What it does">Max-heap: push negatives, negate again when you pop</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>heapq.heappush(h, (dist, node))</code></td><td data-label="What it does">Tuples compare by the first item, then the second</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>heapq.heappushpop(h, x)</code></td><td data-label="What it does">Push, then pop the smallest. Faster than doing both</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>heapq.nlargest(k, nums)</code> · <code>nsmallest</code></td><td data-label="What it does">The k largest or smallest, as a sorted list</td><td class="t-cost"><span class="cost mid">O(n log k)</span></td></tr></tbody></table></div></div><p class="note tip"><b>Tip</b>Python 3.14 added max-heap functions such as <code>heappush_max</code>. LeetCode may run an older version, so negating is the safe habit.</p><div class="cards" data-block><article class="card" data-entry><div class="card-head"><h3>Kth Largest: min-heap of size k</h3><span class="card-tag">Week 8</span><button class="copy" type="button" aria-label="Copy the Kth Largest: min-heap of size k code">Copy</button></div><pre><code class="language-python">import heapq
+
+def find_kth_largest(nums, k):
+    heap = []
+    for x in nums:
+        heapq.heappush(heap, x)
+        if len(heap) &gt; k:
+            heapq.heappop(heap)             # drop the smallest
+    return heap[0]                          # smallest of the k largest</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Top K Frequent</h3><span class="card-tag">Week 1</span><button class="copy" type="button" aria-label="Copy the Top K Frequent code">Copy</button></div><pre><code class="language-python">import heapq
+from collections import Counter
+
+def top_k_frequent(nums, k):
+    counts = Counter(nums)
+    return heapq.nlargest(k, counts.keys(), key=counts.get)
+    # also fine: [x for x, _ in counts.most_common(k)]</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Merge K Sorted Lists: tie-breaker</h3><span class="card-tag">Hard · Phase 3</span><button class="copy" type="button" aria-label="Copy the Merge K Sorted Lists: tie-breaker code">Copy</button></div><pre><code class="language-python">import heapq
+
+def merge_k_lists(lists):
+    heap = []
+    for i, node in enumerate(lists):
+        if node:
+            heapq.heappush(heap, (node.val, i, node))   # i breaks ties; nodes can't compare
+    dummy = tail = ListNode(0)
+    while heap:
+        _, i, node = heapq.heappop(heap)
+        tail.next = node
+        tail = node
+        if node.next:
+            heapq.heappush(heap, (node.next.val, i, node.next))
+    return dummy.next</code></pre></article></div></section><section class="panel" id="sorting" data-section><div class="panel-head"><h2>Sorting and <code>bisect</code></h2><span class="tag">Weeks 1 and 5</span></div><p class="intro">Sorting with a key is a Week 1 tool. <code>bisect</code> is binary search on a sorted list, already written for you.</p><div data-block><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>nums.sort()</code> · <code>sorted(nums)</code></td><td data-label="What it does">In place · new list. Both are stable</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>sorted(nums, reverse=True)</code></td><td data-label="What it does">Descending</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>words.sort(key=len)</code></td><td data-label="What it does">Sort by a key function</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>pairs.sort(key=lambda p: p[1])</code></td><td data-label="What it does">Sort by the second item</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>people.sort(key=lambda p: (-p[0], p[1]))</code></td><td data-label="What it does">Several keys: first descending, then ascending</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>sorted(d.items(), key=lambda kv: kv[1])</code></td><td data-label="What it does">Dict entries ordered by value</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>intervals.sort()</code></td><td data-label="What it does">Lists and tuples sort by their first item, then the second</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nums.sort(key=cmp_to_key(cmp))</code></td><td data-label="What it does">Sort with a compare function (<code>from functools import cmp_to_key</code>), e.g. Largest Number</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>bisect.bisect_left(a, x)</code></td><td data-label="What it does">First index where <code>a[i] &gt;= x</code></td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>bisect.bisect_right(a, x)</code></td><td data-label="What it does">First index where <code>a[i] &gt; x</code></td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>bisect.insort(a, x)</code></td><td data-label="What it does">Insert and keep <code>a</code> sorted. The search is fast; the shift is O(n)</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>bisect.bisect_left(a, x, key=f)</code></td><td data-label="What it does">Search by a key. Python 3.10+</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr></tbody></table></div></div><div class="cards" data-block><article class="card" data-entry><div class="card-head"><h3>Binary search</h3><span class="card-tag">Week 5</span><button class="copy" type="button" aria-label="Copy the Binary search code">Copy</button></div><pre><code class="language-python">def search(nums, target):
+    lo, hi = 0, len(nums) - 1
+    while lo &lt;= hi:
+        mid = (lo + hi) // 2                # Python ints never overflow
+        if nums[mid] == target:
+            return mid
+        if nums[mid] &lt; target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Binary search on the answer: Koko</h3><span class="card-tag">Week 5</span><button class="copy" type="button" aria-label="Copy the Binary search on the answer: Koko code">Copy</button></div><pre><code class="language-python">def min_eating_speed(piles, h):
+    lo, hi = 1, max(piles)
+    while lo &lt; hi:
+        mid = (lo + hi) // 2
+        hours = sum((p + mid - 1) // mid for p in piles)   # ceiling division
+        if hours &lt;= h:
+            hi = mid                        # fast enough; try slower
+        else:
+            lo = mid + 1
+    return lo</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Latest value at time t (floor)</h3><span class="card-tag">Week 5</span><button class="copy" type="button" aria-label="Copy the Latest value at time t (floor) code">Copy</button></div><pre><code class="language-python">import bisect
+
+def value_at(times, values, t):
+    # Time Based Key-Value Store: times is sorted
+    i = bisect.bisect_right(times, t)       # first time &gt; t
+    return values[i - 1] if i else ""       # the one before it is &lt;= t</code></pre></article></div></section><section class="panel" id="toolbox" data-section><div class="panel-head"><h2><code>itertools</code>, <code>functools</code>, <code>math</code></h2><span class="tag">As needed</span></div><p class="intro">Small standard-library helpers that replace whole loops.</p><div data-block><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th><th class="t-cost">Cost</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>@cache</code></td><td data-label="What it does">Memoize a function: top-down DP in one line (<code>from functools import cache</code>, Python 3.9+)</td><td class="t-cost"></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>itertools.permutations(nums)</code></td><td data-label="What it does">Every ordering</td><td class="t-cost"><span class="cost slow">O(n!)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>itertools.combinations(nums, k)</code></td><td data-label="What it does">Every group of k, ignoring order</td><td class="t-cost"><span class="cost slow">exponential</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>itertools.product(range(3), repeat=2)</code></td><td data-label="What it does">Every <code>(i, j)</code> pair: nested loops in one line</td><td class="t-cost"><span class="cost mid">O(n·m)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>itertools.accumulate(nums)</code></td><td data-label="What it does">Running totals (prefix sums)</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>itertools.groupby(s)</code></td><td data-label="What it does">Runs of equal neighbors (String Compression)</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>itertools.pairwise(nums)</code></td><td data-label="What it does">Adjacent pairs <code>(a, b)</code>. Python 3.10+</td><td class="t-cost"><span class="cost mid">O(n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>zip(*grid)</code></td><td data-label="What it does">Transpose a grid: columns become tuples</td><td class="t-cost"><span class="cost mid">O(n·m)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>math.inf</code></td><td data-label="What it does">Infinity, same as <code>float("inf")</code></td><td class="t-cost"></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>math.gcd(a, b)</code> · <code>math.lcm(a, b)</code></td><td data-label="What it does">Greatest common divisor · least common multiple</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>-(-a // b)</code></td><td data-label="What it does">Ceiling division that stays exact for huge ints. <code>math.ceil(a / b)</code> goes through a float</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>math.sqrt(x)</code> · <code>math.isqrt(n)</code></td><td data-label="What it does">Float square root · exact integer square root</td><td class="t-cost"><span class="cost fast">O(1)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>pow(a, b, mod)</code></td><td data-label="What it does">Fast modular power</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>bin(x).count("1")</code></td><td data-label="What it does">Count set bits (Number of 1 Bits)</td><td class="t-cost"><span class="cost fast">O(log n)</span></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>sys.setrecursionlimit(10**6)</code></td><td data-label="What it does">Raise the default limit of 1,000 nested calls for deep DFS</td><td class="t-cost"></td></tr></tbody></table></div></div></section><section class="panel" id="patterns" data-section><div class="panel-head"><h2>Pattern templates</h2><span class="tag">Weeks 2–27</span></div><p class="intro">Skeletons to adapt, not paste. Each card runs against test cases. The graph templates (grid BFS/DFS, topological sort, union-find, Dijkstra) are worth knowing cold.</p><div class="cards" data-block><article class="card" data-entry><div class="card-head"><h3>Two pointers on sorted input</h3><span class="card-tag">Week 2 · Two Sum II</span><button class="copy" type="button" aria-label="Copy the Two pointers on sorted input code">Copy</button></div><pre><code class="language-python">def two_sum_sorted(numbers, target):
+    l, r = 0, len(numbers) - 1
+    while l &lt; r:
+        total = numbers[l] + numbers[r]
+        if total == target:
+            return [l + 1, r + 1]
+        if total &lt; target:
+            l += 1                          # need a bigger sum
+        else:
+            r -= 1                          # need a smaller sum
+    return []</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Sliding window</h3><span class="card-tag">Week 3</span><button class="copy" type="button" aria-label="Copy the Sliding window code">Copy</button></div><pre><code class="language-python">def length_of_longest_substring(s):
+    window = set()
+    l = best = 0
+    for r, c in enumerate(s):
+        while c in window:
+            window.remove(s[l])             # shrink until valid
+            l += 1
+        window.add(c)
+        best = max(best, r - l + 1)
+    return best</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Prefix sums + hash map</h3><span class="card-tag">Subarray Sum Equals K</span><button class="copy" type="button" aria-label="Copy the Prefix sums + hash map code">Copy</button></div><pre><code class="language-python">from collections import defaultdict
+
+def subarray_sum(nums, k):
+    seen = defaultdict(int)
+    seen[0] = 1                             # the empty prefix
+    total = count = 0
+    for x in nums:
+        total += x
+        count += seen[total - k]            # earlier prefixes that leave exactly k
+        seen[total] += 1
+    return count</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Grid BFS: Rotting Oranges</h3><span class="card-tag">Week 11</span><button class="copy" type="button" aria-label="Copy the Grid BFS: Rotting Oranges code">Copy</button></div><pre><code class="language-python">from collections import deque
+
+def oranges_rotting(grid):
+    rows, cols = len(grid), len(grid[0])
+    q = deque()
+    fresh = 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 2:
+                q.append((r, c))            # multi-source: every rotten orange starts
+            elif grid[r][c] == 1:
+                fresh += 1
+    minutes = 0
+    while q and fresh:
+        for _ in range(len(q)):             # one level = one minute
+            r, c = q.popleft()
+            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nr, nc = r + dr, c + dc
+                if 0 &lt;= nr &lt; rows and 0 &lt;= nc &lt; cols and grid[nr][nc] == 1:
+                    grid[nr][nc] = 2        # mark on push, not on pop
+                    fresh -= 1
+                    q.append((nr, nc))
+        minutes += 1
+    return minutes if fresh == 0 else -1</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Grid DFS: Number of Islands</h3><span class="card-tag">Week 10</span><button class="copy" type="button" aria-label="Copy the Grid DFS: Number of Islands code">Copy</button></div><pre><code class="language-python">def num_islands(grid):
+    rows, cols = len(grid), len(grid[0])
+
+    def dfs(r, c):
+        if r &lt; 0 or r &gt;= rows or c &lt; 0 or c &gt;= cols or grid[r][c] != "1":
+            return
+        grid[r][c] = "0"                    # mark visited by sinking the land
+        dfs(r + 1, c)
+        dfs(r - 1, c)
+        dfs(r, c + 1)
+        dfs(r, c - 1)
+
+    islands = 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == "1":
+                islands += 1
+                dfs(r, c)
+    return islands</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Topological sort: Course Schedule II</h3><span class="card-tag">Weeks 13–14</span><button class="copy" type="button" aria-label="Copy the Topological sort: Course Schedule II code">Copy</button></div><pre><code class="language-python">from collections import deque
+
+def find_order(n, prerequisites):
+    adj = [[] for _ in range(n)]
+    indegree = [0] * n
+    for course, pre in prerequisites:       # take pre before course
+        adj[pre].append(course)
+        indegree[course] += 1
+    q = deque(i for i in range(n) if indegree[i] == 0)
+    order = []
+    while q:
+        u = q.popleft()
+        order.append(u)
+        for v in adj[u]:
+            indegree[v] -= 1
+            if indegree[v] == 0:
+                q.append(v)
+    return order if len(order) == n else []   # [] means there's a cycle</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Union-find</h3><span class="card-tag">Week 15</span><button class="copy" type="button" aria-label="Copy the Union-find code">Copy</button></div><pre><code class="language-python">def count_components(n, edges):
+    parent = list(range(n))
+    size = [1] * n
+
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]   # path halving
+            x = parent[x]
+        return x
+
+    components = n
+    for a, b in edges:
+        ra, rb = find(a), find(b)
+        if ra == rb:
+            continue                        # already connected: this edge makes a cycle
+        if size[ra] &lt; size[rb]:
+            ra, rb = rb, ra                 # smaller tree goes under the larger
+        parent[rb] = ra
+        size[ra] += size[rb]
+        components -= 1
+    return components</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Dijkstra: Network Delay Time</h3><span class="card-tag">Week 16</span><button class="copy" type="button" aria-label="Copy the Dijkstra: Network Delay Time code">Copy</button></div><pre><code class="language-python">import heapq
+from collections import defaultdict
+
+def network_delay_time(times, n, k):
+    adj = defaultdict(list)
+    for u, v, w in times:
+        adj[u].append((v, w))
+    dist = {}
+    heap = [(0, k)]                         # (distance, node)
+    while heap:
+        d, u = heapq.heappop(heap)
+        if u in dist:
+            continue                        # already settled with a shorter distance
+        dist[u] = d
+        for v, w in adj[u]:
+            if v not in dist:
+                heapq.heappush(heap, (d + w, v))
+    return max(dist.values()) if len(dist) == n else -1</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Intervals: Merge Intervals</h3><span class="card-tag">Week 17</span><button class="copy" type="button" aria-label="Copy the Intervals: Merge Intervals code">Copy</button></div><pre><code class="language-python">def merge(intervals):
+    intervals.sort()                        # by start, then end
+    merged = []
+    for start, end in intervals:
+        if not merged or merged[-1][1] &lt; start:
+            merged.append([start, end])
+        else:
+            merged[-1][1] = max(merged[-1][1], end)
+    return merged</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Backtracking: Subsets</h3><span class="card-tag">Week 18</span><button class="copy" type="button" aria-label="Copy the Backtracking: Subsets code">Copy</button></div><pre><code class="language-python">def subsets(nums):
+    result, path = [], []
+
+    def backtrack(start):
+        result.append(path[:])             # copy! path keeps changing
+        for i in range(start, len(nums)):
+            path.append(nums[i])            # choose
+            backtrack(i + 1)                # explore
+            path.pop()                      # un-choose
+
+    backtrack(0)
+    return result</code></pre></article><article class="card" data-entry><div class="card-head"><h3>DP top-down with @cache: House Robber</h3><span class="card-tag">Week 19</span><button class="copy" type="button" aria-label="Copy the DP top-down with @cache: House Robber code">Copy</button></div><pre><code class="language-python">from functools import cache
+
+def rob(nums):
+    @cache
+    def best(i):                            # best total from house i onward
+        if i &gt;= len(nums):
+            return 0
+        return max(best(i + 1), nums[i] + best(i + 2))   # skip it or rob it
+
+    return best(0)</code></pre></article><article class="card" data-entry><div class="card-head"><h3>DP bottom-up table: Longest Common Subsequence</h3><span class="card-tag">Week 25</span><button class="copy" type="button" aria-label="Copy the DP bottom-up table: Longest Common Subsequence code">Copy</button></div><pre><code class="language-python">def longest_common_subsequence(a, b):
+    dp = [[0] * (len(b) + 1) for _ in range(len(a) + 1)]
+    for i in range(len(a) - 1, -1, -1):
+        for j in range(len(b) - 1, -1, -1):
+            if a[i] == b[j]:
+                dp[i][j] = 1 + dp[i + 1][j + 1]
+            else:
+                dp[i][j] = max(dp[i + 1][j], dp[i][j + 1])
+    return dp[0][0]</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Trie of nested dicts</h3><span class="card-tag">Week 27</span><button class="copy" type="button" aria-label="Copy the Trie of nested dicts code">Copy</button></div><pre><code class="language-python">class Trie:
+    def __init__(self):
+        self.root = {}
+
+    def insert(self, word):
+        node = self.root
+        for c in word:
+            node = node.setdefault(c, {})
+        node["$"] = True                    # end-of-word marker
+
+    def search(self, word, prefix=False):
+        node = self.root
+        for c in word:
+            if c not in node:
+                return False
+            node = node[c]
+        return prefix or "$" in node</code></pre></article></div></section><section class="panel" id="nodes" data-section><div class="panel-head"><h2>Linked lists and trees</h2><span class="tag">Weeks 6–7</span></div><p class="intro">LeetCode defines <code>ListNode</code> and <code>TreeNode</code> for you. <code>None</code> means "no node."</p><div data-block><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>node.val</code> · <code>node.next</code></td><td data-label="What it does">A list node's value and the next node</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>while node:</code></td><td data-label="What it does">Loop until you fall off the end</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>dummy = tail = ListNode(0)</code></td><td data-label="What it does">Dummy head. Return <code>dummy.next</code>. No empty-list special case</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>root.left</code> · <code>root.right</code></td><td data-label="What it does">A tree node's children</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>Optional[TreeNode]</code></td><td data-label="What it does">LeetCode's type hint for "a node or <code>None</code>"</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>slow is fast</code></td><td data-label="What it does">Compare nodes by identity, not value</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>nonlocal best</code></td><td data-label="What it does">Lets a nested <code>dfs</code> reassign a variable from the outer function</td></tr></tbody></table></div></div><div class="cards" data-block><article class="card" data-entry><div class="card-head"><h3>Reverse Linked List</h3><span class="card-tag">Week 6</span><button class="copy" type="button" aria-label="Copy the Reverse Linked List code">Copy</button></div><pre><code class="language-python">def reverse_list(head):
+    prev, curr = None, head
+    while curr:
+        nxt = curr.next                     # save before overwriting
+        curr.next = prev
+        prev = curr
+        curr = nxt
+    return prev</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Fast and slow pointers</h3><span class="card-tag">Week 6</span><button class="copy" type="button" aria-label="Copy the Fast and slow pointers code">Copy</button></div><pre><code class="language-python">def has_cycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow is fast:
+            return True                     # Linked List Cycle
+    return False                            # with no cycle, slow stops at the middle</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Tree recursion: Max Depth</h3><span class="card-tag">Week 7</span><button class="copy" type="button" aria-label="Copy the Tree recursion: Max Depth code">Copy</button></div><pre><code class="language-python">def max_depth(root):
+    if not root:
+        return 0
+    return 1 + max(max_depth(root.left), max_depth(root.right))</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Level-order BFS</h3><span class="card-tag">Week 7</span><button class="copy" type="button" aria-label="Copy the Level-order BFS code">Copy</button></div><pre><code class="language-python">from collections import deque
+
+def level_order(root):
+    levels = []
+    q = deque([root] if root else [])
+    while q:
+        level = []
+        for _ in range(len(q)):
+            node = q.popleft()
+            level.append(node.val)
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+        levels.append(level)
+    return levels</code></pre></article><article class="card" data-entry><div class="card-head"><h3>nonlocal: Diameter of Binary Tree</h3><span class="card-tag">Week 7</span><button class="copy" type="button" aria-label="Copy the nonlocal: Diameter of Binary Tree code">Copy</button></div><pre><code class="language-python">def diameter_of_binary_tree(root):
+    best = 0
+
+    def height(node):
+        nonlocal best                       # we reassign best below
+        if not node:
+            return 0
+        left, right = height(node.left), height(node.right)
+        best = max(best, left + right)
+        return 1 + max(left, right)
+
+    height(root)
+    return best</code></pre></article></div></section><section class="panel" id="ood" data-section><div class="panel-head"><h2>Object-oriented design toolkit</h2><span class="tag">Phase 3 · Weeks 21–29</span></div><p class="intro">Design rounds ask for things like an LRU cache, a rate limiter, a pub/sub bus and a task scheduler. These are the Python pieces they're built from.</p><div data-block><div class="table-wrap"><table class="calls stack"><thead><tr><th>Code</th><th>What it does</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Code"><code>def __init__(self, ...):</code></td><td data-label="What it does">Constructor. <code>self</code> is the instance being built</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>@dataclass</code></td><td data-label="What it does">Writes <code>__init__</code>, <code>__repr__</code> and <code>__eq__</code> from typed fields (<code>from dataclasses import dataclass</code>)</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>@dataclass(order=True)</code></td><td data-label="What it does">Also writes <code>&lt;</code>, so instances sort and work in <code>heapq</code></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>@dataclass(frozen=True)</code></td><td data-label="What it does">Immutable and hashable, so it can be a dict key</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>field(default_factory=list)</code></td><td data-label="What it does">A fresh list for each instance. Never write <code>= []</code></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>class Status(Enum): IDLE = auto()</code></td><td data-label="What it does">Named states instead of loose strings (<code>from enum import Enum, auto</code>)</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>class Sink(ABC): @abstractmethod</code></td><td data-label="What it does">An interface: subclasses must implement the abstract methods</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>Protocol</code></td><td data-label="What it does">A duck-typed interface for type checkers (<code>from typing import Protocol</code>)</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>@property</code></td><td data-label="What it does">A computed attribute you read like a field: <code>drone.needs_charge</code></td></tr><tr data-entry><td class="t-code" data-label="Code"><code>__eq__</code> · <code>__hash__</code> · <code>__lt__</code></td><td data-label="What it does">Equality, hashing and ordering for your own classes</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>OrderedDict</code></td><td data-label="What it does"><code>move_to_end(k)</code> and <code>popitem(last=False)</code>: the LRU cache building blocks</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>time.monotonic()</code></td><td data-label="What it does">A clock for rate limiters and timeouts that never jumps backwards</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>threading.Lock()</code> · <code>with lock:</code></td><td data-label="What it does">Guard shared state across threads</td></tr><tr data-entry><td class="t-code" data-label="Code"><code>queue.Queue()</code></td><td data-label="What it does">Thread-safe queue. <code>get()</code> blocks until an item arrives</td></tr></tbody></table></div></div><div class="cards" data-block><article class="card" data-entry><div class="card-head"><h3>LRU cache</h3><span class="card-tag">Week 21</span><button class="copy" type="button" aria-label="Copy the LRU cache code">Copy</button></div><p class="card-note">Interviewers may ask for the version built from a <code>dict</code> plus a doubly linked list. <code>OrderedDict</code> is that structure, already written.</p><pre><code class="language-python">from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.items = OrderedDict()
+
+    def get(self, key: int) -&gt; int:
+        if key not in self.items:
+            return -1
+        self.items.move_to_end(key)         # mark as most recently used
+        return self.items[key]
+
+    def put(self, key: int, value: int) -&gt; None:
+        self.items[key] = value
+        self.items.move_to_end(key)
+        if len(self.items) &gt; self.capacity:
+            self.items.popitem(last=False)  # evict the least recently used</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Rate limiter: sliding window log</h3><span class="card-tag">Week 22</span><button class="copy" type="button" aria-label="Copy the Rate limiter: sliding window log code">Copy</button></div><pre><code class="language-python">import time
+from collections import deque
+
+class RateLimiter:
+    """Allow at most `limit` requests per `window` seconds."""
+
+    def __init__(self, limit: int, window: float, clock=time.monotonic):
+        self.limit = limit
+        self.window = window
+        self.clock = clock                  # injectable, so tests can fake time
+        self.calls = deque()
+
+    def allow(self) -&gt; bool:
+        now = self.clock()
+        while self.calls and now - self.calls[0] &gt;= self.window:
+            self.calls.popleft()            # forget calls outside the window
+        if len(self.calls) &lt; self.limit:
+            self.calls.append(now)
+            return True
+        return False</code></pre></article><article class="card" data-entry><div class="card-head"><h3>State with @dataclass and Enum</h3><span class="card-tag">Week 24</span><button class="copy" type="button" aria-label="Copy the State with @dataclass and Enum code">Copy</button></div><pre><code class="language-python">from dataclasses import dataclass
+from enum import Enum, auto
+
+class Status(Enum):
+    IDLE = auto()
+    FLYING = auto()
+    OFFLINE = auto()
+
+@dataclass
+class Drone:
+    id: int
+    battery: int = 100
+    status: Status = Status.IDLE
+
+    @property
+    def needs_charge(self) -&gt; bool:
+        return self.battery &lt; 20</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Pub/sub with an abstract interface</h3><span class="card-tag">Week 26</span><button class="copy" type="button" aria-label="Copy the Pub/sub with an abstract interface code">Copy</button></div><pre><code class="language-python">from abc import ABC, abstractmethod
+from collections import defaultdict
+
+class Subscriber(ABC):
+    @abstractmethod
+    def notify(self, topic: str, message: dict) -&gt; None: ...
+
+class EventBus:
+    def __init__(self):
+        self.subscribers = defaultdict(list)    # topic -&gt; subscribers
+
+    def subscribe(self, topic: str, sub: Subscriber) -&gt; None:
+        self.subscribers[topic].append(sub)
+
+    def publish(self, topic: str, message: dict) -&gt; None:
+        for sub in self.subscribers.get(topic, []):   # get() doesn't add the topic
+            sub.notify(topic, message)</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Priority scheduler: dataclass in a heap</h3><span class="card-tag">Week 28</span><button class="copy" type="button" aria-label="Copy the Priority scheduler: dataclass in a heap code">Copy</button></div><pre><code class="language-python">import heapq
+from dataclasses import dataclass, field
+from typing import Optional
+
+@dataclass(order=True)
+class Task:
+    priority: int                           # lower number runs first
+    seq: int                                # tie-breaker: first in, first out
+    name: str = field(compare=False)
+
+class Scheduler:
+    def __init__(self):
+        self.heap = []
+        self.count = 0
+
+    def submit(self, name: str, priority: int) -&gt; None:
+        heapq.heappush(self.heap, Task(priority, self.count, name))
+        self.count += 1
+
+    def next_task(self) -&gt; Optional[str]:
+        return heapq.heappop(self.heap).name if self.heap else None</code></pre></article><article class="card" data-entry><div class="card-head"><h3>Producer and consumer threads</h3><span class="card-tag">Concurrency</span><button class="copy" type="button" aria-label="Copy the Producer and consumer threads code">Copy</button></div><p class="card-note">In standard CPython, threads take turns running Python code (the GIL). They help while waiting on I/O, not with CPU-heavy work.</p><pre><code class="language-python">import queue
+import threading
+
+def run_pipeline(readings):
+    events = queue.Queue()                  # already thread-safe
+    results = []
+
+    def sensor():
+        for r in readings:
+            events.put(r)
+        events.put(None)                    # sentinel: no more data
+
+    def station():
+        while (item := events.get()) is not None:   # blocks until an item arrives
+            results.append(item)
+
+    workers = [threading.Thread(target=sensor), threading.Thread(target=station)]
+    for w in workers:
+        w.start()
+    for w in workers:
+        w.join()
+    return results</code></pre></article></div></section><section class="panel" id="big-o" data-section><div class="panel-head"><h2>What each operation costs</h2><span class="tag">Reference</span></div><p class="intro">Per-operation costs, then a rough guide for picking a target complexity from the input size.</p><div data-block><h3 class="block-title">Built-in types</h3><div class="table-wrap"><table class="stack labeled"><thead><tr><th>Type</th><th>Read</th><th>Find</th><th>Add / remove</th><th>Notes</th></tr></thead><tbody><tr data-entry><td class="t-code" data-label="Type"><code>list</code></td><td data-label="Read">O(1) by index</td><td data-label="Find">O(n) with <code>in</code></td><td data-label="Add / remove">O(1) at the end, O(n) at the front or middle</td><td data-label="Notes"><code>sort</code> is O(n log n)</td></tr><tr data-entry><td class="t-code" data-label="Type"><code>str</code></td><td data-label="Read">O(1) by index</td><td data-label="Find">O(n·m) with <code>find</code></td><td data-label="Add / remove">Every change builds a new string</td><td data-label="Notes">Slices copy, O(k)</td></tr><tr data-entry><td class="t-code" data-label="Type"><code>dict</code> · <code>set</code> · <code>Counter</code></td><td data-label="Read">—</td><td data-label="Find">O(1) average</td><td data-label="Add / remove">O(1) average</td><td data-label="Notes">O(n) worst case. <code>dict</code> keeps insertion order</td></tr><tr data-entry><td class="t-code" data-label="Type"><code>deque</code></td><td data-label="Read">O(1) at the ends, O(n) in the middle</td><td data-label="Find">O(n)</td><td data-label="Add / remove">O(1) at either end</td><td data-label="Notes">Use it for every queue</td></tr><tr data-entry><td class="t-code" data-label="Type"><code>heapq list</code></td><td data-label="Read">O(1), <code>h[0]</code> only</td><td data-label="Find">—</td><td data-label="Add / remove">O(log n)</td><td data-label="Notes"><code>heapify</code> is O(n)</td></tr></tbody></table></div></div><div data-block><h3 class="block-title">Input size → complexity to aim for</h3><div class="table-wrap"><table class="stack"><thead><tr><th>If n is up to</th><th class="t-cost">Aim for</th><th>Typical approach</th></tr></thead><tbody><tr data-entry><td data-label="If n is up to">10</td><td class="t-cost"><span class="cost slow">O(n!)</span></td><td data-label="Typical approach">Try every permutation</td></tr><tr data-entry><td data-label="If n is up to">20</td><td class="t-cost"><span class="cost slow">O(2ⁿ)</span></td><td data-label="Typical approach">Try every subset, backtracking</td></tr><tr data-entry><td data-label="If n is up to">300</td><td class="t-cost"><span class="cost slow">O(n³)</span></td><td data-label="Typical approach">Three nested loops, some DP</td></tr><tr data-entry><td data-label="If n is up to">3,000</td><td class="t-cost"><span class="cost slow">O(n²)</span></td><td data-label="Typical approach">Two nested loops, 2D DP</td></tr><tr data-entry><td data-label="If n is up to">100,000</td><td class="t-cost"><span class="cost mid">O(n log n)</span></td><td data-label="Typical approach">Sort, heap, binary search per element</td></tr><tr data-entry><td data-label="If n is up to">1,000,000</td><td class="t-cost"><span class="cost mid">O(n)</span></td><td data-label="Typical approach">Hash map, two pointers, sliding window</td></tr><tr data-entry><td data-label="If n is up to">Larger than that</td><td class="t-cost"><span class="cost fast">O(log n)</span></td><td data-label="Typical approach">Binary search on the answer, math</td></tr></tbody></table></div></div><p class="note tip"><b>Tip</b>Python manages very roughly 10⁷ simple operations per second, so these limits sit a notch below C++. LeetCode gives Python extra time, but an O(n²) solution on n = 100,000 still times out.</p></section><section class="panel" id="gotchas" data-section><div class="panel-head"><h2>Gotchas</h2><span class="tag">Skim before each session</span></div><p class="intro">The mistakes that cost the most time. Most of them run without an error and give a wrong answer.</p><div class="traps" data-block><article class="trap" data-entry><h3><code>[[0] * cols] * rows</code></h3><p>Every row is the same list, so changing one row changes all of them.</p><p class="fix"><b>Fix</b><code>[[0] * cols for _ in range(rows)]</code></p></article><article class="trap" data-entry><h3>Appending a list you keep changing</h3><p><code>result.append(path)</code> stores a reference; later <code>pop()</code> calls empty it.</p><p class="fix"><b>Fix</b><code>result.append(path[:])</code></p></article><article class="trap" data-entry><h3>Mutable default arguments</h3><p><code>def f(seen=set())</code> shares one set across every call.</p><p class="fix"><b>Fix</b><code>seen=None</code>, then <code>if seen is None: seen = set()</code></p></article><article class="trap" data-entry><h3><code>{}</code> is an empty dict</h3><p>It's not an empty set.</p><p class="fix"><b>Fix</b><code>set()</code></p></article><article class="trap" data-entry><h3><code>//</code> rounds down</h3><p><code>-7 // 2</code> is -4, not -3.</p><p class="fix"><b>Fix</b><code>int(a / b)</code> to truncate toward zero</p></article><article class="trap" data-entry><h3><code>sort()</code> returns <code>None</code></h3><p><code>nums = nums.sort()</code> sets <code>nums</code> to <code>None</code>.</p><p class="fix"><b>Fix</b><code>nums.sort()</code> on its own line, or <code>nums = sorted(nums)</code></p></article><article class="trap" data-entry><h3>Strings are immutable</h3><p><code>s[0] = "x"</code> raises TypeError.</p><p class="fix"><b>Fix</b><code>chars = list(s)</code>, edit, then <code>"".join(chars)</code></p></article><article class="trap" data-entry><h3><code>s += c</code> in a loop</h3><p>Can copy the whole string each time, O(n²) overall.</p><p class="fix"><b>Fix</b>Collect parts in a list, then <code>"".join(parts)</code></p></article><article class="trap" data-entry><h3>Recursion limit</h3><p>Python stops at about 1,000 nested calls with RecursionError.</p><p class="fix"><b>Fix</b><code>sys.setrecursionlimit(10**6)</code> or an explicit stack</p></article><article class="trap" data-entry><h3><code>list.pop(0)</code> is O(n)</h3><p>Using a list as a queue makes BFS quadratic.</p><p class="fix"><b>Fix</b><code>deque</code> and <code>popleft()</code></p></article><article class="trap" data-entry><h3><code>x in list</code> inside a loop</h3><p>Each check is O(n), so the loop is O(n²).</p><p class="fix"><b>Fix</b>Convert to a <code>set</code> first</p></article><article class="trap" data-entry><h3>Changing a dict or set while looping over it</h3><p>Raises RuntimeError.</p><p class="fix"><b>Fix</b>Loop over a copy: <code>for k in list(d):</code></p></article><article class="trap" data-entry><h3>Reassigning an outer variable in a nested function</h3><p><code>best = ...</code> inside <code>dfs</code> creates a new local and raises UnboundLocalError.</p><p class="fix"><b>Fix</b><code>nonlocal best</code>. Mutating, like <code>res.append</code>, doesn't need it</p></article><article class="trap" data-entry><h3>Heap ties between objects</h3><p><code>(dist, node)</code> raises TypeError when two distances tie and nodes can't be compared.</p><p class="fix"><b>Fix</b><code>(dist, i, node)</code> with a unique counter <code>i</code></p></article><article class="trap" data-entry><h3><code>heapq</code> is min-only</h3><p>There's no max-heap flag before Python 3.14.</p><p class="fix"><b>Fix</b>Push <code>-x</code>, negate again on pop</p></article><article class="trap" data-entry><h3><code>is</code> vs <code>==</code></h3><p><code>is</code> checks identity. It seems to work for small ints, then fails.</p><p class="fix"><b>Fix</b><code>==</code> for values; <code>is</code> only for <code>None</code> and node identity</p></article><article class="trap" data-entry><h3>Shallow copies</h3><p><code>grid[:]</code> and <code>grid.copy()</code> copy only the outer list.</p><p class="fix"><b>Fix</b><code>[row[:] for row in grid]</code> or <code>copy.deepcopy</code></p></article><article class="trap" data-entry><h3><code>d[k]</code> on a missing key</h3><p>Raises KeyError.</p><p class="fix"><b>Fix</b><code>d.get(k, 0)</code> or a <code>defaultdict</code></p></article></div></section><p class="empty" id="empty" hidden>Nothing matches. Try a shorter word, or press Esc to clear.</p></main>
+  <footer>Week tags suggest a study order from a 52-week interview prep plan. Every code card runs against test cases on Python 3.9; features from newer versions are marked.</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+(function () {
+  if (window.hljs) {
+    document.querySelectorAll('pre code').forEach(function (el) { window.hljs.highlightElement(el); });
+  }
+  var input = document.getElementById('filter');
+  var count = document.getElementById('filter-count');
+  var empty = document.getElementById('empty');
+  var entries = Array.prototype.slice.call(document.querySelectorAll('[data-entry]'));
+  var blocks = Array.prototype.slice.call(document.querySelectorAll('[data-block]'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section[data-section]'));
+  var texts = entries.map(function (e) { return e.textContent.toLowerCase(); });
+  var total = entries.length;
+
+  function apply() {
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    entries.forEach(function (e, i) {
+      var hit = q === '' || texts[i].indexOf(q) !== -1;
+      e.hidden = !hit;
+      if (hit) shown++;
+    });
+    blocks.forEach(function (b) { b.hidden = q !== '' && !b.querySelector('[data-entry]:not([hidden])'); });
+    sections.forEach(function (s) {
+      var visible = q === '' || !!s.querySelector('[data-entry]:not([hidden])');
+      s.hidden = !visible;
+      var link = document.querySelector('nav.index a[href="#' + s.id + '"]');
+      if (link) link.hidden = !visible;
+    });
+    count.textContent = q === '' ? total + ' entries' : shown + ' of ' + total;
+    empty.hidden = shown !== 0;
+  }
+
+  input.addEventListener('input', apply);
+  input.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape') { input.value = ''; apply(); }
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === '/' && document.activeElement !== input) { ev.preventDefault(); input.focus(); }
+  });
+
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest('.copy');
+    if (!btn) return;
+    var code = btn.closest('.card').querySelector('pre code');
+    var reset = function () { setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var fallback = function () {
+      var range = document.createRange();
+      range.selectNodeContents(code);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      btn.textContent = 'Selected';
+      reset();
+    };
+    try {
+      navigator.clipboard.writeText(code.textContent).then(function () {
+        btn.textContent = 'Copied';
+        reset();
+      }, fallback);
+    } catch (err) {
+      fallback();
+    }
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>

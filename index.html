@@ -108,6 +108,10 @@ code { font-family: var(--font-mono); font-size: 0.86em; }
 h1 { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.01em; font-size: clamp(2.8rem, 8vw, 4.6rem); line-height: 0.92; margin: 0; text-wrap: balance; }
 h1 .plus { color: var(--accent); }
 .lede { max-width: 64ch; color: var(--muted); font-size: 1.05rem; margin: 0; }
+.companion { margin: 0; font-size: 14px; color: var(--muted); }
+.companion a { color: var(--accent); font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
+.companion a:hover { border-bottom-width: 2px; }
+.companion a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; font-size: 13px; color: var(--muted); }
 .legend span.item { display: inline-flex; gap: 6px; align-items: center; }
 
@@ -215,6 +219,7 @@ footer { margin-top: 48px; padding-top: 14px; border-top: 1px solid var(--rule);
     <p class="kicker">NeetCode · LeetCode · Python 3.9+</p>
     <h1><span class="plus">&gt;&gt;&gt;</span> Python Field Card</h1>
     <p class="lede">The built-ins and standard library tools NeetCode problems actually use, when to reach for each one, pattern templates you can adapt, and the object-oriented design toolkit for design rounds.</p>
+    <p class="companion">Also available: <a href="https://jerrymeza-exe.github.io/cpp-field-card/">C++ Field Card →</a></p>
     <div class="legend"><span>Cost chips:</span><span class="item"><span class="cost fast">O(1)</span> constant or log</span><span class="item"><span class="cost mid">O(n)</span> linear to n log n</span><span class="item"><span class="cost slow">O(2ⁿ)</span> exponential or worst case</span><span class="item"><span class="cost fast">O(1)*</span> amortized</span></div>
   </header>
   <div class="toolbar">
